@@ -3,6 +3,7 @@ package com.kaif.wheatherapp.service;
 import com.kaif.wheatherapp.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,6 +29,7 @@ public class WeatherService {
         return "test successful";
     }
 
+    @Cacheable(value = "weather",key = "#city")
     public WeatherResponse getData(String city) {
         String url = apiUrl+"?key="+apikey+"&q="+city;
         Root response = template.getForObject(url, Root.class);
