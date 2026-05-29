@@ -32,7 +32,15 @@ public class WebSecurityConfig {
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->auth
-                        .requestMatchers("/weather/test","/weather/*","/signup","/login").permitAll()
+                        .requestMatchers("/login",
+                                "/signup",
+
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+
+                                "/weather/test",
+                                "/weather/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
