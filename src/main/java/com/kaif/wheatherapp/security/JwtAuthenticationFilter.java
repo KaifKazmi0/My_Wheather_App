@@ -29,22 +29,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String requestTokenHeader =
                 request.getHeader("Authorization");
-        if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer ")){
-            filterChain.doFilter(request,response);
-            return;
+
+        if(requestTokenHeader != null &&
+                requestTokenHeader.startsWith("Bearer ")){
+
+            String token = requestTokenHeader.substring(7);
+
+            String username =
+                    authUtil.getUsernameFromToken(token);
+
+            if(username != null &&
+                    SecurityContextHolder.getContext()
+                            .getAuthentication() == null){
+
+                User user = userRepository
+                        .findByUsername(username)
+                        .orElse(null);
+
+                if(user != null){
+
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(
+                                    user,
+                                    null,
+                                    user.getAuthorities()
+                            );
+
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(auth);
+                }
+            }
         }
 
-        String token = requestTokenHeader.split("Bearer ")[1];
-        String username = authUtil.getUsernameFromToken(token);
-
-        if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            User user = userRepository.findByUsername(username).orElseThrow();
-
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            filterChain.doFilter(request,response);
-        }
+        filterChain.doFilter(request,response);
     }
 }

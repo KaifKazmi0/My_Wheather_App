@@ -1,15 +1,18 @@
 package com.kaif.wheatherapp.service;
 
 import com.kaif.wheatherapp.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class WeatherService {
 
@@ -27,6 +30,29 @@ public class WeatherService {
 
     public String test(){
         return "test successful";
+    }
+
+
+    @CachePut(value = "weather", key = "#city")
+    public WeatherResponse refreshData(String city) {
+        log.info("Calling external weather API for {}", city);
+
+        String url = apiUrl + "?key=" + apikey + "&q=" + city;
+
+        Root response = template.getForObject(url, Root.class);
+
+        if(response == null){
+            throw new RuntimeException("Failed to fetch weather data");
+        }
+
+        WeatherResponse weatherResponse = new WeatherResponse();
+        weatherResponse.setCity(response.getLocation().getName());
+        weatherResponse.setTemp(response.getCurrent().getTemp_c());
+        weatherResponse.setCondition(response.getCurrent().getCondition().getText());
+        weatherResponse.setRegion(response.getLocation().getRegion());
+        weatherResponse.setCountry(response.getLocation().getCountry());
+
+        return weatherResponse;
     }
 
     @Cacheable(value = "weather",key = "#city")

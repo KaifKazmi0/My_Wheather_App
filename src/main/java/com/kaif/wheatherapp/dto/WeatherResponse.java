@@ -6,14 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class WeatherResponse {
+public class WeatherResponse implements Serializable {
     private String city;
     private String region;
     private String country;
     private String condition;
-    private Double Temp;
+    private Double temp;
 }

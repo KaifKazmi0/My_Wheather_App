@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ResponseForecast {
+public class ResponseForecast implements Serializable {
     private WeatherResponse weatherResponse;
     private List<DayTemp> dayTemps;
 }
