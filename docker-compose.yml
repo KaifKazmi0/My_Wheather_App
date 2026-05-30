@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
 
   mariadb:
@@ -11,15 +13,15 @@ services:
       MARIADB_ROOT_PASSWORD: root123
     volumes:
       - mariadb_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
 
   redis:
     image: redis:7-alpine
     container_name: redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
 
   backend:
     build:
@@ -29,6 +31,7 @@ services:
     depends_on:
       - mariadb
       - redis
+
     environment:
       DB_URL: jdbc:mariadb://mariadb:3306/weather_app
       DB_USERNAME: student
@@ -40,8 +43,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       WEATHER_API_KEY: ${WEATHER_API_KEY}
 
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
 
   frontend:
     build:
@@ -51,7 +54,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "3000:80"
+      - "80:80"
 
 volumes:
   mariadb_data:
