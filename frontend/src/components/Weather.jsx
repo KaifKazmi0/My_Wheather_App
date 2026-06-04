@@ -18,7 +18,7 @@ function Weather() {
             setLoading(true);
             setError("");
 
-            const res = await API.get(`/weather/${city}`);
+            const res = await API.get(`/weather/city/${city}`);
 
             setWeather(res.data);
 

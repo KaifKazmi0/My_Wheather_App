@@ -19,8 +19,9 @@ public class WeatherController {
         return weatherService.test();
     }
 
-    @GetMapping("/{city}")
+    @GetMapping("/city/{city}")
     public WeatherResponse getWeatherData(@PathVariable String city){
+        System.out.println("CONTROLLER HIT: " + city);
         return weatherService.getData(city);
     }
 

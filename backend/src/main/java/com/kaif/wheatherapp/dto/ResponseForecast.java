@@ -1,5 +1,6 @@
 package com.kaif.wheatherapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseForecast implements Serializable {
     private WeatherResponse weatherResponse;
     private List<DayTemp> dayTemps;

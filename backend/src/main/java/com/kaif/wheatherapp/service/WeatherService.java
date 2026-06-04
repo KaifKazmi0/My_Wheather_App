@@ -16,6 +16,8 @@ import java.util.List;
 @Service
 public class WeatherService {
 
+
+
     @Autowired
     private RestTemplate template;
 
@@ -55,9 +57,13 @@ public class WeatherService {
         return weatherResponse;
     }
 
-    @Cacheable(value = "weather",key = "#city")
+    @Cacheable(value = "weather",key = "#city.toLowerCase()")
     public WeatherResponse getData(String city) {
         String url = apiUrl+"?key="+apikey+"&q="+city;
+        String respnse = template.getForObject(url, String.class);
+
+        System.out.println("RAW RESPONSE:");
+        log.info(respnse);
         Root response = template.getForObject(url, Root.class);
         if(response==null){
             throw new RuntimeException("Failed to fetch weather data");

@@ -31,25 +31,33 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http){
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println("SECURITY CONFIG LOADED V2");
 
         http
-                .csrf(csrf->csrf.disable())
-                .cors(Customizer.withDefaults())
-                .sessionManagement(session
-                        -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->auth
+                .csrf(csrf -> csrf.disable())
+                // EXPLICITLY bind the CORS configuration source bean you created earlier
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/login",
                                 "/signup",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
-                                "/weather/**"
+                                "/weather/test",
+                                "/weather/city/**"
                         ).permitAll()
+                        .requestMatchers("/weather/forecast").authenticated()
                         .anyRequest().authenticated()
+                ).exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(
+                                (req,res,e) -> res.sendError(401)
+                        )
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -60,11 +68,15 @@ public class WebSecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        System.out.println("CORS CONFIG LOADED");
 
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of("http://localhost:5173")
+                List.of(
+                        "http://localhost:8080",
+                        "http://localhost:3000"
+                )
         );
 
         configuration.setAllowedMethods(
