@@ -73,6 +73,56 @@ A full-stack Weather Application deployed on AWS EC2 using Docker, Spring Boot, 
 
 ![Weather App Architecture](docs/weather-app-architecture.png)
 
+Overall deployment architecture of the Weather App on AWS EC2.
+
+---
+
+# Deployment Architecture Diagram
+
+![Deployment Architecture](docs/deployment-architecture.png)
+
+Shows:
+- AWS EC2 Host
+- Nginx Reverse Proxy
+- Docker Compose
+- Frontend Container
+- Backend Container
+- MariaDB
+- Redis
+- HTTPS Flow
+- Let's Encrypt
+
+---
+
+# JWT Authentication Flow
+
+![JWT Flow](docs/jwt-auth-flow.png)
+
+Authentication sequence:
+
+1. User submits credentials.
+2. Spring Security authenticates user.
+3. JWT token is generated.
+4. Token is returned to frontend.
+5. Frontend stores JWT.
+6. JWT included in Authorization header.
+7. Backend validates JWT before serving protected resources.
+
+---
+
+# Weather Retrieval & Redis Cache Flow
+
+![Weather Cache Flow](docs/weather-cache-flow.png)
+
+Request sequence:
+
+1. User requests weather data.
+2. Backend checks Redis cache.
+3. Cache Hit → Return cached response.
+4. Cache Miss → Call Weather API.
+5. Store response in Redis.
+6. Return data to user.
+
 # Domain & SSL
 
 Domain:
