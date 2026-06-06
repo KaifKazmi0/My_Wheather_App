@@ -75,7 +75,9 @@ public class WebSecurityConfig {
         configuration.setAllowedOrigins(
                 List.of(
                         "http://localhost:8080",
-                        "http://localhost:3000"
+                        "http://localhost:3000",
+                        "https://kaifkazmi.duckdns.org",
+                        "http://kaifkazmi.duckdns.org"
                 )
         );
 
