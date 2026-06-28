@@ -381,7 +381,7 @@ configuration.setAllowedOrigins(
 
 ## Future Enhancements
 
-* Fix duplicate user issue
+
 * Verify JWT Authentication Flow
 * Verify Protected Endpoints
 * Allocate AWS Elastic IP
